@@ -31,11 +31,13 @@ async def write_to_log(reader):
 async def check_token(reader, writer):
     text = await reader.readline()
     logging.info(f'sender:{text.decode()}')
-    if json.loads(text.decode()) is None:
+    if data := json.loads(text.decode()) is None:
         await write_to_log(reader)
         message = input('Token is wrong. Write new username:').replace("\n", "")
         writer.write(f'{message}\n\n'.encode())
         logging.info(f'writer:{message}')
+    else:
+        print(f'Выполнена авторизация. Пользователь {data["username"]}.')
 
 
 async def send_message_chat(reader, writer):
